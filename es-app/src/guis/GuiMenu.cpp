@@ -29,6 +29,7 @@
 #include "scrapers/ThreadedScraper.h"
 #include "ApiSystem.h"
 #include "views/gamelist/IGameListView.h"
+#include "components/BatteryIndicatorComponent.h"
 
 #include <go2/display.h>
 #include "SystemConf.h"
@@ -1079,6 +1080,15 @@ void GuiMenu::openUISettings()
 		}
 	});
 
+	// Battery indicator
+	if (mWindow->getBatteryIndicator() && mWindow->getBatteryIndicator()->hasBattery())
+	{
+		auto batteryStatus = std::make_shared<SwitchComponent>(mWindow);
+		batteryStatus->setState(Settings::getInstance()->getBool("ShowBatteryIndicator"));
+		s->addWithLabel(_("SHOW BATTERY STATUS"), batteryStatus);
+		s->addSaveFunc([batteryStatus] { Settings::getInstance()->setBool("ShowBatteryIndicator", batteryStatus->getState()); });
+	}
+
 	// enable filters (ForceDisableFilters)
 	auto enable_filter = std::make_shared<SwitchComponent>(mWindow);
 	enable_filter->setState(!Settings::getInstance()->getBool("ForceDisableFilters"));
@@ -1313,6 +1323,7 @@ void GuiMenu::openOtherSettings()
 	auto es_timezones = std::make_shared<OptionListComponent<std::string> >(mWindow, _("TIMEZONE"), false);
 
 	std::string currentTimezone = SystemConf::getInstance()->get("system.timezone");
+
 	if (currentTimezone.empty())
 		currentTimezone = std::string(getShOutput(R"(/usr/local/bin/timezones current)"));
 	std::string a;
@@ -1320,10 +1331,13 @@ void GuiMenu::openOtherSettings()
 		es_timezones->add(a, a, currentTimezone == a);
 	}
 	s->addWithLabel(_("TIMEZONE"), es_timezones);
-	s->addSaveFunc([es_timezones] {
+	s->addSaveFunc([es_timezones, this] {
 		if (es_timezones->changed()) {
 			std::string selectedTimezone = es_timezones->getSelected();
 			runSystemCommand("ln -sf /usr/share/zoneinfo/" + selectedTimezone + " /etc/localtime", "", nullptr);
+			std::string setRepo = std::string(getShOutput(R"(/usr/local/bin/timezones setrepo)"));
+			if (!setRepo.empty())
+			  mWindow->displayNotificationMessage(setRepo);
 		}
 		SystemConf::getInstance()->set("system.timezone", es_timezones->getSelected());
 	});
