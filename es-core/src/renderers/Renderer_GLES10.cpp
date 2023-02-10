@@ -13,7 +13,7 @@
 
 //#include <go2/display.h>
 //#include <go2/input.h>
-#include <go2/audio.h>
+//#include <go2/audio.h>
 #include <drm/drm_fourcc.h>
 //#include "BatteryIcons.h"
 //#include "VolumeIcons.h"
