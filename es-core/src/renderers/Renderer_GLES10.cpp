@@ -11,9 +11,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#include <go2/display.h>
-#include <go2/input.h>
-#include <go2/audio.h>
+//#include <go2/display.h>
+//#include <go2/input.h>
+//#include <go2/audio.h>
 #include <drm/drm_fourcc.h>
 #include "BatteryIcons.h"
 #include "VolumeIcons.h"
@@ -21,7 +21,7 @@
 #include "BrightnessIcon.h"
 #include "PowerIcon.h"
 #include "BlankIcon.h"
-#include "ArkOS.h"
+//#include "ArkOS.h"
 
 static go2_input_t* input = nullptr;
 static go2_surface_t* titlebarSurface = nullptr;
