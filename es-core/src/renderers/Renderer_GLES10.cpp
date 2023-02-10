@@ -23,8 +23,8 @@
 #include "BlankIcon.h"
 //#include "ArkOS.h"
 
-static go2_input_t* input = nullptr;
-static go2_surface_t* titlebarSurface = nullptr;
+//static go2_input_t* input = nullptr;
+//static go2_surface_t* titlebarSurface = nullptr;
 static unsigned int frame = 0;
 
 namespace Renderer
